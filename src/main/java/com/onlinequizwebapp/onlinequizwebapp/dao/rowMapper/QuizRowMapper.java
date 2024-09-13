@@ -18,6 +18,7 @@ public class QuizRowMapper implements RowMapper<Quiz> {
         Category category=new Category();
         category.setId(rs.getInt("categoryId"));
         category.setName(rs.getString("categoryName"));
+        quiz.setId(rs.getInt("quizId"));
         quiz.setStartTime(rs.getTimestamp("startTime"));
         quiz.setEndTime(rs.getTimestamp("endTime"));
         quiz.setQuizName(rs.getString("quizName"));

@@ -53,7 +53,7 @@ public class ChoiceDAOImpl implements ChoiceDAO {
     @Override
     public Choice getChoiceByChoiceId(Integer id) {
         String query = "SELECT * FROM choices WHERE choiceId=?";
-        List<Choice> choices = jdbcTemplate.query(query, rowMapper);
+        List<Choice> choices = jdbcTemplate.query(query, rowMapper, id);
         return choices.size()==0?null:choices.get(0);
     }
 }

@@ -86,14 +86,16 @@ public class Quiz {
         this.quizName = quizName;
     }
 
-    private void setNumberOfCorrectQuestions(){
+    public void setNumberOfCorrectQuestions(){
         this.numberOfCorrectQuestions=0;
         for (QuestionAnswer questionAnswer : this.questionAnswerList){
-            this.numberOfCorrectQuestions+=questionAnswer.getCorrectAnswer()?0:1;
+            if(questionAnswer.getCorrectAnswer()){
+                this.numberOfCorrectQuestions+=1;
+            }
         }
     }
 
-    private void setIsPass(){
+    public void setIsPass(){
         if ((this.numberOfCorrectQuestions/this.questionAnswerList.size()*100)>50){
             isPass=true;
         }else{

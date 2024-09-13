@@ -31,8 +31,8 @@ public class QuestionAnswerDAOImpl implements QuestionAnswerDAO {
     public List<QuestionAnswer> getAllQuestionsAndAnswerByQuizIdUserId(Integer quizId, Integer userId) {
         String query="Select qq.quizId as quizId, qq.questionId as questionId, q.userId, qq.userChoiceId as userChoiceId, q.categoryId from QuizQuestion qq LEFT JOIN Quiz q ON qq.quizId=q.quizId WHERE q.userId=? and q.quizId=?;";
         List<QuestionAnswer> questionAnswers = jdbcTemplate.query(query, rowMapper, userId, quizId);
-        for (QuestionAnswer questionAnswer: questionAnswers){
-            getQuestionsAndAnswerByQuizIdUserIdQuestionId(quizId, userId, questionAnswer.getQuestion().getId());
+        for (int i=0; i< questionAnswers.size();i++){
+            questionAnswers.set(i, getQuestionsAndAnswerByQuizIdUserIdQuestionId(quizId, userId, questionAnswers.get(i).getQuestion().getId()));
         }
         return questionAnswers;
     }

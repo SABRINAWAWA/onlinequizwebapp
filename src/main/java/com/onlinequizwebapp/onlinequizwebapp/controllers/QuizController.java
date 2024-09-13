@@ -1,6 +1,5 @@
 package com.onlinequizwebapp.onlinequizwebapp.controllers;
 
-import com.onlinequizwebapp.onlinequizwebapp.domain.Category;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Question;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Quiz;
 import com.onlinequizwebapp.onlinequizwebapp.services.QuestionService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/quiz")
 public class QuizController {
     private final QuizService quizService;
     private final QuestionService questionService;
@@ -21,7 +19,7 @@ public class QuizController {
         this.questionService = questionService;
     }
 
-    @GetMapping("/quiz-management")
+    @GetMapping("/quiz-result-management")
     public String getAllQuizResults(Model model) {
         List<Quiz> quizList=quizService.getAllQuizResults();
         System.out.println(quizList);
@@ -29,15 +27,15 @@ public class QuizController {
         return "quiz-result-management";
     }
 
-    @GetMapping("/{quizId}")
+    @GetMapping("/quiz/{quizId}")
     public String getQuizResult(@PathVariable("quizId") Integer id, Model model) {
         Quiz quiz=quizService.getQuizResult(id);
         System.out.println(quiz);
-        model.addAttribute("quizResult", quiz);
+        model.addAttribute("quiz", quiz);
         return "quiz-result";
     }
 
-    @GetMapping("/all/user/{userId}")
+    @GetMapping("/quiz/all/user/{userId}")
     public String getQuizResultForUser(@PathVariable("userId") Integer userId, Model model) {
         List<Quiz> quizList=quizService.getAllQuizResultForUser(userId);
         System.out.println(quizList);

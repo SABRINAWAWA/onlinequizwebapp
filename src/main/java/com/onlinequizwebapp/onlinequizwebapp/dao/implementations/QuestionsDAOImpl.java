@@ -42,9 +42,10 @@ public class QuestionsDAOImpl implements QuestionDAO {
     @Override
     public List<Question> randomPickQuestionByCategory(Integer categoryId) {
         List<Question> questionBank = getAllQuestionByCategory(categoryId);
-        Set set  = new Random().ints(0,10).distinct().limit(5).boxed().collect(Collectors.toSet());
+        List<Question> validQuestionBack=questionBank.stream().filter(q->q.isActive()).collect(Collectors.toList());
+        Set set  = new Random().ints(0,validQuestionBack.size()).distinct().limit(5).boxed().collect(Collectors.toSet());
         List<Question> finalTestSuite=new ArrayList<>();
-        set.forEach(e->finalTestSuite.add(questionBank.get((int)e)));
+        set.forEach(e->finalTestSuite.add(validQuestionBack.get((int)e)));
         return finalTestSuite;
     }
 

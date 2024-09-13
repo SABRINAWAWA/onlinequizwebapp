@@ -43,6 +43,8 @@ public class QuizDAOImpl implements QuizDAO {
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
             quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
+            quiz.setNumberOfCorrectQuestions();
+            quiz.setIsPass();
         }
         return quizList.get(0);
     }
@@ -59,6 +61,8 @@ public class QuizDAOImpl implements QuizDAO {
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
             quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
+            quiz.setNumberOfCorrectQuestions();
+            quiz.setIsPass();
         }
         return quizList;
     }
@@ -75,13 +79,15 @@ public class QuizDAOImpl implements QuizDAO {
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
             quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
+            quiz.setNumberOfCorrectQuestions();
+            quiz.setIsPass();
         }
         return quizList.size()==0?null:quizList.get(0);
     }
 
     @Override
     public List<Quiz> getAllQuizResult() {
-        String query="SELECT qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName\n" +
+        String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName\n" +
                 "FROM QuizQuestion qq\n" +
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
@@ -90,6 +96,8 @@ public class QuizDAOImpl implements QuizDAO {
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
             quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
+            quiz.setNumberOfCorrectQuestions();
+            quiz.setIsPass();
         }
         return quizList;
     }
