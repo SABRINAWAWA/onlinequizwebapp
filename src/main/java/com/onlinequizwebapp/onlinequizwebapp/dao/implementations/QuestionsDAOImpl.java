@@ -22,7 +22,7 @@ public class QuestionsDAOImpl implements QuestionDAO {
     ChoiceDAOImpl choiceDAOImpl;
 
     @Autowired
-    public QuestionsDAOImpl(JdbcTemplate jdbcTemplate, QuestionRowMapper rowMapper,  ChoiceDAOImpl choiceDAOImpl) {
+    public QuestionsDAOImpl(JdbcTemplate jdbcTemplate, QuestionRowMapper rowMapper, ChoiceDAOImpl choiceDAOImpl) {
         this.jdbcTemplate = jdbcTemplate;
         this.rowMapper = rowMapper;
         this.choiceDAOImpl=choiceDAOImpl;
@@ -30,7 +30,7 @@ public class QuestionsDAOImpl implements QuestionDAO {
 
     @Override
     public List<Question> getAllQuestionByCategory(Integer categoryId) {
-        String query = "SELECT * FROM questions WHERE categoryId=?";
+        String query = "SELECT * FROM questions q LEFT JOIN category c ON c.categoryId=q.categoryId WHERE q.categoryId=?;";
         List<Question> questionBank = jdbcTemplate.query(query, rowMapper, categoryId);
         for (Question q: questionBank){
             List<Choice> choices=choiceDAOImpl.getAllChoiceByQuestionId(q.getId());

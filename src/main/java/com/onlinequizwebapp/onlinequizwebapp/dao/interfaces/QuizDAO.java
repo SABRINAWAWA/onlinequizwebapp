@@ -1,5 +1,6 @@
 package com.onlinequizwebapp.onlinequizwebapp.dao.interfaces;
 
+import com.onlinequizwebapp.onlinequizwebapp.domain.Category;
 import com.onlinequizwebapp.onlinequizwebapp.domain.QuestionAnswer;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Quiz;
 
@@ -12,4 +13,5 @@ public interface QuizDAO {
     Quiz getQuizByQuizId(Integer quizId);
     void submitQuiz(Quiz quiz);
     void generateNewQuiz(Integer userId);
+    String generateQuizName(Integer categoryId);
 }

@@ -7,6 +7,7 @@ import com.onlinequizwebapp.onlinequizwebapp.domain.User;
 import com.onlinequizwebapp.onlinequizwebapp.services.CategoryService;
 import com.onlinequizwebapp.onlinequizwebapp.services.QuestionService;
 import com.onlinequizwebapp.onlinequizwebapp.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/questions-management")
-public class QuestionController {
+public class QuestionController extends MainController{
     private final QuestionService questionService;
     private final CategoryService categoryService;
 
@@ -27,7 +28,8 @@ public class QuestionController {
     }
 
     @GetMapping("")
-    public String getAllQuestions(Model model) {
+    public String getAllQuestions(HttpServletRequest request, Model model) {
+        insertSessionUser(request, model);
         List<Question> questions=questionService.getAllQuestions();
         System.out.println(questions);
         model.addAttribute("questions", questions);

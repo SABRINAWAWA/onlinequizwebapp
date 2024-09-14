@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <%-- div is for grouping items --%>
+ <%@ include file="navigation.jsp" %>
         <div>
             <form method="post" action="/questions-management/question/new">
                 <h2>Create a new question</h2>

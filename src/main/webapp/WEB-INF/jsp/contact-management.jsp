@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <%-- div is for grouping items --%>
+ <%@ include file="admin-navigation.jsp" %>
         <div>
             <div align="center">
                 <h1>Contact Management</h1>
@@ -16,7 +16,7 @@
                     <th>Email</th>
                     <th>Subject</th>
                     <th>Message</th>
-                    <th>Action</th>
+                    <th>Created At</th>
 
                     <c:forEach var="contact" items="${contacts}" varStatus="status">
                         <tr>
@@ -28,7 +28,6 @@
                             <td>
                                 <a href="/view-contact-us/${contact.id}">View</a>
                             </td>
-
                         </tr>
                     </c:forEach>
                 </table>

@@ -3,6 +3,7 @@ package com.onlinequizwebapp.onlinequizwebapp.controllers;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Contact;
 import com.onlinequizwebapp.onlinequizwebapp.domain.User;
 import com.onlinequizwebapp.onlinequizwebapp.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-public class UserController {
+public class UserController extends MainController{
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -18,7 +19,8 @@ public class UserController {
     }
 
     @GetMapping("/user-management")
-    public String getAllUsers(Model model) {
+    public String getAllUsers(HttpServletRequest request, Model model) {
+        insertSessionUser(request, model);
         List<User> listUsers=userService.getAllUsers();
         System.out.println(listUsers);
         model.addAttribute("users", listUsers);
@@ -40,7 +42,8 @@ public class UserController {
     }
 
     @GetMapping("/user-register")
-    public String createNewUser(Model model) {
+    public String createNewUser(HttpServletRequest request, Model model) {
+        insertSessionUser(request, model);
         return "user-register";
     }
 

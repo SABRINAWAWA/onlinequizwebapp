@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <%-- div is for grouping items --%>
+ <%@ include file="navigation.jsp" %>
         <div>
             <div align="center">
                 <h1>View Contact Message</h1>

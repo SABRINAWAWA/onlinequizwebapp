@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<%-- div is for grouping items --%>
+ <%@ include file="navigation.jsp" %>
 <div>
     <form method="post" action="/user-register">
         <div>
@@ -27,6 +27,7 @@
         </div>
         <button type="submit">Submit</button>
     </form>
+    <a href="/login">Already have an account? Login.</a>
 </div>
 </body>
 

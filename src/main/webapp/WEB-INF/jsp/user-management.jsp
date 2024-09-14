@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <%-- div is for grouping items --%>
+ <%@ include file="admin-navigation.jsp" %>
         <div>
             <div align="center">
                 <h1>User Management</h1>

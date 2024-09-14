@@ -6,7 +6,15 @@
 </head>
 
 <body>
+ <%@ include file="navigation.jsp" %>
 <div>
+    <c:choose>
+        <c:when test="${user.getAdmin()==false}">
+        <button>
+        <a href="/take-quiz/category/${quiz.getCategory().getId()}">Back</a>
+        </button>
+        </c:when>
+   </c:choose>
     <div>
         <h4>${quiz.quizName}</h4>
     </div>
@@ -38,7 +46,7 @@
         </h4>
     </div>
     <div>
-        <th>Questions</th>
+        <h3>Questions</h3>
         <c:forEach var="question" items="${quiz.getQuestionAnswerList()}" varStatus="loop">
             <p>${question.getQuestion().getDescription()}</p>
             <ul>
@@ -57,7 +65,15 @@
             <p> You selected: ${question.getUserChoice().getDescription()} </p>
         </c:forEach>
     </div>
-    <a href="/quiz-result-management">Back</a>
+    <c:choose>
+        <c:when test="${user.getAdmin()==true}">
+        <a href="/quiz-result-management">Back</a>
+        </c:when>
+        <c:otherwise>
+        <a href="/home">Back</a>
+        </c:otherwise>
+   </c:choose>
+
 </div>
 </body>
 

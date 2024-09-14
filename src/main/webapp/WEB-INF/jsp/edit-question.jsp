@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <%-- div is for grouping items --%>
+ <%@ include file="navigation.jsp" %>
         <div>
             <form method="post" action="/questions-management/question/edit/${question.getId()}">
                 <h2>Update Question</h2>

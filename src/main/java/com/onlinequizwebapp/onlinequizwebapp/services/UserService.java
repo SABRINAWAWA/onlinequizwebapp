@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -25,5 +26,11 @@ public class UserService {
     public User suspendedUserById(Integer id){return userDAOImpl.suspendedUserById(id);}
     public User getUserById(Integer id) {
         return userDAOImpl.getUserById(id);
+    }
+    public Optional<User> validateLogin(String email, String password) {
+        return userDAOImpl.getAllUsers().stream()
+                .filter(a -> a.getEmail().equals(email)
+                        && a.getPassword().equals(password))
+                .findAny();
     }
 }
