@@ -1,28 +1,38 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<nav>
-    <ul>
-        <li><a href="/home">Home</a></li>
-        <c:choose>
-             <c:when test="${session.getAttribute('user') ==null}">
-             <li><a href="/login">Log in</a></li>
-             <li><a href="/user-register">Register</a></li>
-             </c:when>
-            <c:otherwise>
-            <li><a href="/logout">Log out</a></li>
-            </c:otherwise>
-        </c:choose>
-        <c:choose>
-             <c:when test="${user.getAdmin()==true && user.getActive()==true}">
-             <li><a href="/contact-us-management">Contacts</a></li>
-             <li><a href="/questions-management">Questions</a></li>
-             <li><a href="/quiz-result-management">Quiz Results</a></li>
-             <li><a href="/user-management">Users</a></li>
-             </c:when>
-            <c:otherwise>
-            <li><a href="/create-contact">Contact Us</a></li>
-            </c:otherwise>
-        </c:choose>
-    </ul>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Online Quiz</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/home">Home</a>
+                </li>
+                <c:choose>
+                    <c:when test="${session.getAttribute('user') ==null}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Log in</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">Register</a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Log out</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/create-contact">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </nav>
