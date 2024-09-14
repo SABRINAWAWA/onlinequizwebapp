@@ -2,7 +2,6 @@ package com.onlinequizwebapp.onlinequizwebapp.dao.rowMapper;
 
 import com.onlinequizwebapp.onlinequizwebapp.domain.Category;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Question;
-import com.onlinequizwebapp.onlinequizwebapp.domain.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

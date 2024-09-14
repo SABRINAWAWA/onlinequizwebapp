@@ -1,13 +1,9 @@
 package com.onlinequizwebapp.onlinequizwebapp.dao.implementations;
 
 import com.onlinequizwebapp.onlinequizwebapp.dao.interfaces.QuizDAO;
-import com.onlinequizwebapp.onlinequizwebapp.dao.interfaces.UserDAO;
 import com.onlinequizwebapp.onlinequizwebapp.dao.rowMapper.QuizRowMapper;
-import com.onlinequizwebapp.onlinequizwebapp.dao.rowMapper.UserRowMapper;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Category;
-import com.onlinequizwebapp.onlinequizwebapp.domain.QuestionAnswer;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Quiz;
-import com.onlinequizwebapp.onlinequizwebapp.domain.User;
 import com.onlinequizwebapp.onlinequizwebapp.domain.requestDomain.CreateQuizRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

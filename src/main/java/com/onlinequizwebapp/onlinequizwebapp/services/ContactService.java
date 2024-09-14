@@ -1,7 +1,6 @@
 package com.onlinequizwebapp.onlinequizwebapp.services;
 
 import com.onlinequizwebapp.onlinequizwebapp.dao.implementations.ContactDAOImpl;
-import com.onlinequizwebapp.onlinequizwebapp.domain.Choice;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

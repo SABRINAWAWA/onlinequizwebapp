@@ -1,6 +1,5 @@
 package com.onlinequizwebapp.onlinequizwebapp.controllers;
 
-import com.onlinequizwebapp.onlinequizwebapp.domain.Contact;
 import com.onlinequizwebapp.onlinequizwebapp.domain.User;
 import com.onlinequizwebapp.onlinequizwebapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;

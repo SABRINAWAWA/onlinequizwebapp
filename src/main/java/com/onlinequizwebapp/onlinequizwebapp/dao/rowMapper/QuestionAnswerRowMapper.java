@@ -1,6 +1,5 @@
 package com.onlinequizwebapp.onlinequizwebapp.dao.rowMapper;
 
-import com.onlinequizwebapp.onlinequizwebapp.domain.Category;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Choice;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Question;
 import com.onlinequizwebapp.onlinequizwebapp.domain.QuestionAnswer;
@@ -24,10 +23,3 @@ public class QuestionAnswerRowMapper implements RowMapper<QuestionAnswer> {
         return questionAnswer;
     }
 }
-
-/*
-select qq.quizId as quizId, qq.questionId as questionId, q.userId, qq.userChoiceId as userChoiceId, q.categoryId from QuizQuestion qq
-LEFT JOIN Quiz q
-ON qq.quizId=q.quizId
-WHERE q.userId=1 and q.quizId=4
- */

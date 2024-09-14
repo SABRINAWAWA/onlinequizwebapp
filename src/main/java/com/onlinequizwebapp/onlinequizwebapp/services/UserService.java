@@ -1,8 +1,6 @@
 package com.onlinequizwebapp.onlinequizwebapp.services;
 
-import com.onlinequizwebapp.onlinequizwebapp.dao.implementations.CategoryDAOImpl;
 import com.onlinequizwebapp.onlinequizwebapp.dao.implementations.UserDAOImpl;
-import com.onlinequizwebapp.onlinequizwebapp.domain.Category;
 import com.onlinequizwebapp.onlinequizwebapp.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
