@@ -8,10 +8,12 @@ import com.onlinequizwebapp.onlinequizwebapp.domain.Category;
 import com.onlinequizwebapp.onlinequizwebapp.domain.QuestionAnswer;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Quiz;
 import com.onlinequizwebapp.onlinequizwebapp.domain.User;
+import com.onlinequizwebapp.onlinequizwebapp.domain.requestDomain.CreateQuizRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -107,11 +109,12 @@ public class QuizDAOImpl implements QuizDAO {
         return quizList;
     }
 
-
-
     @Override
-    public void submitQuiz(Quiz quiz) {
-
+    public Quiz createQuiz(CreateQuizRequest createQuizRequest) {
+        String query="INSERT INTO Quiz (userId, categoryId, name, startTime, endTime) VALUES (?, ?, ?, ?, ?);";
+        jdbcTemplate.update(query, createQuizRequest.getUserId(), createQuizRequest.getCategoryId(), createQuizRequest.getQuizName(),
+                createQuizRequest.getStartTime(), createQuizRequest.getEndTime());
+        return getQuizByUserIdCategoryIdQuizName(createQuizRequest);
     }
 
     @Override
@@ -120,11 +123,23 @@ public class QuizDAOImpl implements QuizDAO {
     }
 
     @Override
-    public String generateQuizName(Integer categoryId) {
-        String query="SELECT * FROM Quiz q where q.categoryId=?;";
-        List<Quiz> quizList = jdbcTemplate.query(query, rowMapper);
-        int numOfQuiz=quizList.size()+1;
+    public String generateQuizName(Integer categoryId, Integer userId) {
+        String query="SELECT COUNT(*) FROM Quiz q where q.categoryId=? and userId=?;";
+        Integer totalQuiz = jdbcTemplate.queryForObject(query, Integer.class, categoryId, userId);
+        int numOfQuiz=totalQuiz+1;
         Category category=categoryDAOImpl.getCategoryById(categoryId);
         return "Quiz_"+category.getName()+"_"+numOfQuiz;
+    }
+
+    @Override
+    public Quiz getQuizByUserIdCategoryIdQuizName(CreateQuizRequest createQuizRequest) {
+        String query="SELECT qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName\n" +
+                "FROM QuizQuestion qq\n" +
+                "RIGHT JOIN \n" +
+                "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
+                "ON qc.quizId=qq.quizId \n" +
+                "WHERE qc.quizName=? and qc.categoryId=? and qc.userId=?;";
+        List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, createQuizRequest.getQuizName(), createQuizRequest.getCategoryId(), createQuizRequest.getUserId());
+        return quizList.size()==0?null:quizList.get(0);
     }
 }

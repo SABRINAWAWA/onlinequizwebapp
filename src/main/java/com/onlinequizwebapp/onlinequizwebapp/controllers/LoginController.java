@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
-public class LoginController extends MainController{
+public class LoginController{
     private final LoginService loginService;
 
     public LoginController(LoginService loginService) {
@@ -37,7 +37,8 @@ public class LoginController extends MainController{
                 }
             }
         }
-        insertSessionUser(request, model);
+
+        model.addAttribute("session", session);
         return "login";
     }
 

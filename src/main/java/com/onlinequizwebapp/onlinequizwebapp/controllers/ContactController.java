@@ -1,6 +1,7 @@
 package com.onlinequizwebapp.onlinequizwebapp.controllers;
 
 import com.onlinequizwebapp.onlinequizwebapp.domain.Contact;
+import com.onlinequizwebapp.onlinequizwebapp.domain.User;
 import com.onlinequizwebapp.onlinequizwebapp.services.ContactService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Controller
-public class ContactController extends MainController{
+public class ContactController{
     private final ContactService contactService;
 
     public ContactController(ContactService contactService) {
@@ -19,7 +20,10 @@ public class ContactController extends MainController{
 
     @GetMapping("/contact-us-management")
     public String getAllContacts(HttpServletRequest request, Model model) {
-        insertSessionUser(request, model);
+        HttpSession session= request.getSession(false);
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
         List<Contact> listContacts=contactService.getAllContact();
         System.out.println(listContacts);
         model.addAttribute("contacts", listContacts);
@@ -28,7 +32,10 @@ public class ContactController extends MainController{
 
     @GetMapping("/view-contact-us/{id}")
     public String getContactById(@PathVariable Integer id, HttpServletRequest request, Model model) {
-        insertSessionUser(request, model);
+        HttpSession session= request.getSession(false);
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
         System.out.println(id);
         Contact contact=contactService.getContactById(id).orElse(null);
         System.out.println(contact);

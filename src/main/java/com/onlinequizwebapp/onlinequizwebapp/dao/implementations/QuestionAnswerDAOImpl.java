@@ -5,6 +5,7 @@ import com.onlinequizwebapp.onlinequizwebapp.dao.rowMapper.QuestionAnswerRowMapp
 import com.onlinequizwebapp.onlinequizwebapp.domain.Choice;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Question;
 import com.onlinequizwebapp.onlinequizwebapp.domain.QuestionAnswer;
+import com.onlinequizwebapp.onlinequizwebapp.domain.requestDomain.CreateQuestionAnswerRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -58,5 +59,12 @@ public class QuestionAnswerDAOImpl implements QuestionAnswerDAO {
             System.out.println("Cannot retrieve question information and its answer.");
         }
         return questionAnswer;
+    }
+
+    @Override
+    public void createQuizQuestion(CreateQuestionAnswerRequest createQuestionAnswerRequest) {
+        String query="INSERT INTO QuizQuestion (questionId, quizId, userChoiceId) VALUES (?, ?, ?);";
+        jdbcTemplate.update(query, createQuestionAnswerRequest.getQuestionId(), createQuestionAnswerRequest.getQuizId(),
+                createQuestionAnswerRequest.getUserChoiceId());
     }
 }

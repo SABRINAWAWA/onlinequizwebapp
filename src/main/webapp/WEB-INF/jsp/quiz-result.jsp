@@ -11,7 +11,7 @@
     <c:choose>
         <c:when test="${user.getAdmin()==false}">
         <button>
-        <a href="/take-quiz/category/${quiz.getCategory().getId()}">Back</a>
+        <a href="/take-quiz/category/${quiz.getCategory().getId()}">Take another quiz</a>
         </button>
         </c:when>
    </c:choose>

@@ -8,10 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ManagementController extends MainController{
+public class ManagementController{
     @GetMapping("/admin-management-portal")
     public String getAdminManagement(HttpServletRequest request, Model model){
-        insertSessionUser(request, model);
+        HttpSession session= request.getSession(false);
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
         return "admin-management-portal";
     }
 }

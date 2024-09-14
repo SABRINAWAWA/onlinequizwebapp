@@ -96,7 +96,7 @@ public class Quiz {
     }
 
     public void setIsPass(){
-        if ((this.numberOfCorrectQuestions/this.questionAnswerList.size()*100)>50){
+        if (this.numberOfCorrectQuestions>=3){
             isPass=true;
         }else{
             isPass=false;

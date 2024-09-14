@@ -4,6 +4,7 @@ import com.onlinequizwebapp.onlinequizwebapp.domain.Contact;
 import com.onlinequizwebapp.onlinequizwebapp.domain.User;
 import com.onlinequizwebapp.onlinequizwebapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-public class UserController extends MainController{
+public class UserController{
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -20,7 +21,10 @@ public class UserController extends MainController{
 
     @GetMapping("/user-management")
     public String getAllUsers(HttpServletRequest request, Model model) {
-        insertSessionUser(request, model);
+        HttpSession session= request.getSession(false);
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
         List<User> listUsers=userService.getAllUsers();
         System.out.println(listUsers);
         model.addAttribute("users", listUsers);
@@ -43,7 +47,10 @@ public class UserController extends MainController{
 
     @GetMapping("/user-register")
     public String createNewUser(HttpServletRequest request, Model model) {
-        insertSessionUser(request, model);
+        HttpSession session= request.getSession(false);
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
         return "user-register";
     }
 

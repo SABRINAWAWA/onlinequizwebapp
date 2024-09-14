@@ -40,7 +40,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     // 3. READ a Category by id
     @Override
     public Category getCategoryById(Integer id){
-        String query = "SELECT * FROM category WHERE id=?";
+        String query = "SELECT * FROM category WHERE categoryId=?";
 
         List<Category> categories = jdbcTemplate.query(query, rowMapper, id);
 

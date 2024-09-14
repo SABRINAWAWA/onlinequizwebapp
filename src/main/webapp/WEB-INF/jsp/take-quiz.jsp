@@ -9,6 +9,7 @@
 <body>
     <div>
         <%@ include file="navigation.jsp" %>
+        <h1>${quizName}</h1>
             <form method="post" action="/submit-quiz">
                 <div>
                     <p> 1. ${questions.get(0).getDescription()}</p>
