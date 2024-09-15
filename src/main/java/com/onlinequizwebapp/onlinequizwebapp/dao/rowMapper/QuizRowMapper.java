@@ -25,6 +25,7 @@ public class QuizRowMapper implements RowMapper<Quiz> {
         User user=new User();
         user.setId(rs.getInt("userId"));
         quiz.setQuizTaker(user);
+        quiz.setTimeDuration(rs.getInt("timeDuration"));
         return quiz;
     }
 }

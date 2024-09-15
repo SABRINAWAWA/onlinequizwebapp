@@ -11,7 +11,6 @@ public interface QuizDAO {
     List<Quiz> getQuizByUserId(Integer userId);
     Quiz getQuizByQuizId(Integer quizId);
     Quiz createQuiz(CreateQuizRequest createQuizRequest);
-    void generateNewQuiz(Integer userId);
     String generateQuizName(Integer categoryId, Integer userId);
     Quiz getQuizByUserIdCategoryIdQuizName(CreateQuizRequest createQuizRequest);
 }

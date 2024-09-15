@@ -13,10 +13,11 @@ public class Quiz {
     private Boolean isPass;
     private Integer numberOfCorrectQuestions;
     private String quizName;
+    private Integer timeDuration;
 
     public Quiz(){}
 
-    public Quiz(int id, Category category, User quizTaker, Date startTime, Date endTime, List<QuestionAnswer> questionAnswerList, String quizName) {
+    public Quiz(int id, Category category, User quizTaker, Date startTime, Date endTime, List<QuestionAnswer> questionAnswerList, String quizName, Integer timeDuration) {
         this.id = id;
         this.category = category;
         this.quizTaker = quizTaker;
@@ -24,6 +25,7 @@ public class Quiz {
         this.endTime = endTime;
         this.questionAnswerList = questionAnswerList;
         this.quizName=quizName;
+        this.timeDuration = timeDuration;
     }
 
     public int getId() {
@@ -107,6 +109,14 @@ public class Quiz {
         this.questionAnswerList = questionAnswerList;
     }
 
+    public Integer getTimeDuration() {
+        return timeDuration;
+    }
+
+    public void setTimeDuration(Integer timeDuration) {
+        this.timeDuration = timeDuration;
+    }
+
     @Override
     public String toString() {
         return "Quiz{" +
@@ -119,6 +129,7 @@ public class Quiz {
                 ", isPass=" + isPass +
                 ", numberOfCorrectQuestions=" + numberOfCorrectQuestions +
                 ", quizName='" + quizName + '\'' +
+                ", timeDuration=" + timeDuration +
                 '}';
     }
 }

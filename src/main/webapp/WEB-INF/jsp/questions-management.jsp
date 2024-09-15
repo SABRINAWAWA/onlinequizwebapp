@@ -54,7 +54,7 @@
                         <th colspan="3">Actions</th>
                         </thead>
                         <tbody>
-                        <c:forEach var="question" items="${questions}" varStatus="status">
+                        <c:forEach var="question" items="${questions}" varStatus="loop">
                             <tr>
                                 <td>${question.id}</td>
                                 <td>${question.description}</td>

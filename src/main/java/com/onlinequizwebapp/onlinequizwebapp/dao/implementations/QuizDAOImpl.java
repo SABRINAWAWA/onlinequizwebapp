@@ -36,7 +36,7 @@ public class QuizDAOImpl implements QuizDAO {
 
     @Override
     public Quiz getQuizByQuizId(Integer quizId) {
-        String query="SELECT qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName\n" +
+        String query="SELECT qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
                 "FROM QuizQuestion qq\n" +
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
@@ -54,7 +54,7 @@ public class QuizDAOImpl implements QuizDAO {
 
     @Override
     public List<Quiz> getQuizByUserId(Integer userId) {
-        String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName\n" +
+        String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
                 "FROM QuizQuestion qq\n" +
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
@@ -72,7 +72,7 @@ public class QuizDAOImpl implements QuizDAO {
 
     @Override
     public Quiz getQuizByQuizIdUserId(Integer quizId, Integer userId) {
-        String query="SELECT qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName\n" +
+        String query="SELECT qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
                 "FROM QuizQuestion qq\n" +
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
@@ -90,11 +90,11 @@ public class QuizDAOImpl implements QuizDAO {
 
     @Override
     public List<Quiz> getAllQuizResult() {
-        String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName\n" +
+        String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
                 "FROM QuizQuestion qq\n" +
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
-                "ON qc.quizId=qq.quizId";
+                "ON qc.quizId=qq.quizId ORDER BY qc.startTime";
         List<Quiz> quizList = jdbcTemplate.query(query, rowMapper);
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
@@ -111,11 +111,6 @@ public class QuizDAOImpl implements QuizDAO {
         jdbcTemplate.update(query, createQuizRequest.getUserId(), createQuizRequest.getCategoryId(), createQuizRequest.getQuizName(),
                 createQuizRequest.getStartTime(), createQuizRequest.getEndTime());
         return getQuizByUserIdCategoryIdQuizName(createQuizRequest);
-    }
-
-    @Override
-    public void generateNewQuiz(Integer userId) {
-
     }
 
     @Override

@@ -20,7 +20,7 @@
                             <a class="nav-link" href="/login">Log in</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/register">Register</a>
+                            <a class="nav-link" href="/user-register">Register</a>
                         </li>
                     </c:when>
                     <c:otherwise>
