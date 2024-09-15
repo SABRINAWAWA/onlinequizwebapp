@@ -58,7 +58,8 @@ public class QuizDAOImpl implements QuizDAO {
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
                 "ON qc.quizId=qq.quizId \n" +
-                "WHERE qc.userId=?;";
+                "WHERE qc.userId=? \n" +
+                "ORDER BY qc.startTime desc;";
         List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, userId);
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
@@ -76,7 +77,8 @@ public class QuizDAOImpl implements QuizDAO {
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
                 "ON qc.quizId=qq.quizId \n" +
-                "WHERE qc.categoryId=?;";
+                "WHERE qc.categoryId=? \n" +
+                "ORDER BY qc.startTime desc;";
         List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, categoryId);
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
@@ -146,7 +148,7 @@ public class QuizDAOImpl implements QuizDAO {
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
                 "ON qc.quizId=qq.quizId \n" +
-                "WHERE qc.categoryId=?";
+                "WHERE qc.quizName=? AND qc.categoryId=? AND qc.userId=?";
         List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, createQuizRequest.getQuizName(), createQuizRequest.getCategoryId(), createQuizRequest.getUserId());
         return quizList.size()==0?null:quizList.get(0);
     }

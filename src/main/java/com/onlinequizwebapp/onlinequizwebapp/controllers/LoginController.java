@@ -66,6 +66,7 @@ public class LoginController{
 
                 // store user details in session
                 newSession.setAttribute("user", possibleUser.get());
+                newSession.setAttribute("hasOpenQuiz", false);
                 if (possibleUser.get().getAdmin()&&possibleUser.get().getActive()){
                     return "redirect:/admin-management-portal";
                 }else {

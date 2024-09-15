@@ -46,6 +46,12 @@ public class ContactController{
     @GetMapping("/create-contact")
     public String createNewContact(HttpServletRequest request, Model model) {
         HttpSession session= request.getSession(false);
+        Boolean hasOpenQuiz=(Boolean) session.getAttribute("hasOpenQuiz");
+        if (hasOpenQuiz==true){
+            Integer categoryId=(Integer) session.getAttribute("categoryId");
+            model.addAttribute("categoryId", categoryId);
+            model.addAttribute("hasOpenQuiz", hasOpenQuiz);
+        }
         model.addAttribute("session", session);
         return "create-contact";
     }

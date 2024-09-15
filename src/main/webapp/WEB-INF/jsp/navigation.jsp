@@ -5,14 +5,10 @@
             <div class="container-fluid">
                 <c:choose>
                     <c:when test="${user.getAdmin()==true}">
-
                         <a class="navbar-brand" aria-current="page" href="/admin-management-portal">Online Quiz</a>
-
                     </c:when>
                     <c:otherwise>
-
                         <a class="navbar-brand" aria-current="page" href="/home">Online Quiz</a>
-
                     </c:otherwise>
                 </c:choose>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -55,6 +51,13 @@
                             </c:otherwise>
                         </c:choose>
                         <c:choose>
+                            <c:when test="${hasOpenQuiz==true}">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/take-quiz/category/${categoryId}">Taking Quiz</a>
+                                </li>
+                            </c:when>
+                        </c:choose>
+                        <c:choose>
                             <c:when test="${user.getAdmin() ==true}">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -64,9 +67,9 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="/contact-us-management">Contacts</a></li>
                                         <li><a class="dropdown-item" href="/questions-management">Questions</a></li>
-                                        <li><a class="dropdown-item" href="/quiz-result-management">Quiz Results</a>
+                                        <li><a class="dropdown-item" href="/quiz-result-management/page/1">Quiz Results</a>
                                         </li>
-                                        <li><a class="dropdown-item" href="/user-management">Users</a></li>
+                                        <li><a class="dropdown-item" href="/user-management/page/1">Users</a></li>
                                     </ul>
                                 </li>
                             </c:when>

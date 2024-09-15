@@ -91,8 +91,16 @@
                                 </c:forEach>
                         </table>
 
+                        <nav aria-label="pagination-nav">
+                            <ul class="pagination pagination-md justify-content-center">
+                                <c:forEach var="i" begin="1" end="${numOfPage}">
+                                    <li class="page-item">
+                                        <a class="page-link" href="/user-management/page/${i}">${i}</a>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </nav>
 
-                        </tr>
                         <button type="button" class="btn btn-primary btn-sm">
                             <a href="/admin-management-portal" id="backToHome">Back To Portal</a>
                         </button>

@@ -18,15 +18,23 @@ public class UserController{
         this.userService = userService;
     }
 
-    @GetMapping("/user-management")
-    public String getAllUsers(HttpServletRequest request, Model model) {
+    @GetMapping("/user-management/page/{pageNum}")
+    public String getAllUsers(@PathVariable Integer pageNum, HttpServletRequest request, Model model) {
         HttpSession session= request.getSession(false);
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
         List<User> listUsers=userService.getAllUsers();
-        System.out.println(listUsers);
-        model.addAttribute("users", listUsers);
+        //System.out.println(listUsers);
+        Integer numOfPage=(int)Math.ceil((double) listUsers.size()/5);
+        model.addAttribute("numOfPage", numOfPage);
+        List<User> selectedUserList;
+        if (pageNum<numOfPage){
+            selectedUserList= listUsers.subList((pageNum - 1)*5, pageNum*5);
+        }else{
+            selectedUserList= listUsers.subList((pageNum - 1)*5, listUsers.size());
+        }
+        model.addAttribute("users", selectedUserList);
         return "user-management";
     }
 
@@ -50,6 +58,12 @@ public class UserController{
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
+        Boolean hasOpenQuiz=(Boolean) session.getAttribute("hasOpenQuiz");
+        if (hasOpenQuiz==true){
+            Integer categoryId=(Integer) session.getAttribute("categoryId");
+            model.addAttribute("categoryId", categoryId);
+            model.addAttribute("hasOpenQuiz", hasOpenQuiz);
+        }
         return "user-register";
     }
 

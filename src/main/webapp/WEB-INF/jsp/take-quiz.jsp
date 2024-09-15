@@ -34,6 +34,7 @@
                 <%@ include file="navigation.jsp" %>
                     <div class="header content" align="center">
                         <h3 class="display-7">${quizName}</h3>
+                        <h3 class="display-12">Answer 5 Questions in 5 Minutes</h3>
                         <div id="displayCounter">
                         </div>
                         <button onclick="ShowQuestionForm()" id="startButton" style="display: block;" class="btn btn-success">Start Quiz</button>

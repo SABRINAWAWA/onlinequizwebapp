@@ -28,6 +28,12 @@ public class HomeController {
         List<Quiz> quizList=quizService.getAllQuizResultForUser(user.getId());
         List<Category> categoryList=categoryService.getAllCategory();
         HttpSession session= request.getSession(false);
+        Boolean hasOpenQuiz=(Boolean) session.getAttribute("hasOpenQuiz");
+        if (hasOpenQuiz==true){
+            Integer categoryId=(Integer) session.getAttribute("categoryId");
+            model.addAttribute("categoryId", categoryId);
+            model.addAttribute("hasOpenQuiz", hasOpenQuiz);
+        }
         model.addAttribute("session", session);
         model.addAttribute("quizzes", quizList);
         model.addAttribute("categories", categoryList);

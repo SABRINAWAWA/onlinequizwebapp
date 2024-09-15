@@ -15,7 +15,7 @@
     <h1 class="display-4" align="center">Admin Management Portal</h1>
     <div class="list-group d-flex justify-content-center" align="center">
         <div class="list-group-item list-group-item-action" id="management-card">
-            <a href="/user-management" class="alert-link">User Management</a>
+            <a href="/user-management/page/1" class="alert-link">User Management</a>
         </div>
         <div class="list-group-item list-group-item-action" id="management-card">
             <a href="/contact-us-management" class="alert-link">Contact Us Management</a>
@@ -24,7 +24,7 @@
             <a href="/questions-management" class="alert-link">Question Management</a>
         </div>
         <div class="list-group-item list-group-item-action" id="management-card">
-            <a href="/quiz-result-management" class="alert-link">Quiz Result Management</a>
+            <a href="/quiz-result-management/page/1" class="alert-link">Quiz Result Management</a>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

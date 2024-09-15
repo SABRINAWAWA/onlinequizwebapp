@@ -41,7 +41,7 @@
                 <div class="content" align="center">
 
                     <h1 class="display-5">Quiz Results Management</h1>
-                    <a class="btn btn-warning" href="/quiz-result-management">Reset Filter</a>
+                    <a class="btn btn-warning" href="/quiz-result-management/page/1">Reset Filter</a>
                     <table class="table table-hover">
                         <thead class="table-success">
                             <th>ID</th>
@@ -115,6 +115,17 @@
                             </c:forEach>
                         </tbody>
                     </table>
+
+                    <nav aria-label="pagination-nav">
+                        <ul class="pagination pagination-md justify-content-center">
+                            <c:forEach var="i" begin="1" end="${numOfPage}">
+                                <li class="page-item">
+                                    <a class="page-link" href="/quiz-result-management/page/${i}">${i}</a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </nav>
+
                     <button type="button" class="btn btn-primary btn-sm">
                         <a href="/admin-management-portal" id="backToHome">Back To Portal</a>
                     </button>
