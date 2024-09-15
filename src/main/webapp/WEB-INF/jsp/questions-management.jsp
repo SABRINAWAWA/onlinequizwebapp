@@ -82,7 +82,7 @@
                                 <td>
                                     <form method="post" action="/questions-management/question/active/${question.id}">
                                         <button type="submit" class="btn btn-success btn-sm">
-                                            Active
+                                            Activate
                                         </button>
                                     </form>
                                 </td>

@@ -198,29 +198,29 @@ public class QuizController{
         HttpSession session= request.getSession(false);
         Boolean hasOpenQuiz=(Boolean) session.getAttribute("hasOpenQuiz");
         List<Question> questionList=new ArrayList<>();
-        if(hasOpenQuiz==false){
+        String quizName="";
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        if(!hasOpenQuiz){
             session.setAttribute("hasOpenQuiz", true);
             questionList=questionService.generateQuestionsByCategory(categoryId);
             List<Integer> questionIdList=questionList.stream().map(e->e.getId()).collect(Collectors.toList());
             session.setAttribute("questionIdList", questionIdList);
-        }else{
+            quizName=quizService.generateQuizName(categoryId, user.getId());
+            //System.out.println(quizName);
+        }else if (hasOpenQuiz){
             List<Integer> questionIdList = (List<Integer>) session.getAttribute("questionIdList");
             for(Integer questionId: questionIdList){
                 questionList.add(questionService.getQuestionById(questionId));
             }
-            model.addAttribute("questions", questionList);
+            quizName=(String) session.getAttribute("quizName");
         }
-        model.addAttribute("session", session);
-        User user=(User) session.getAttribute("user");
-        model.addAttribute("user", user);
-        System.out.println(questionList);
-        String quizName=quizService.generateQuizName(categoryId, user.getId());
-        System.out.println(quizName);
         Timestamp quizStartTime=Timestamp.from(Instant.now());
         System.out.println(quizStartTime);
         session.setAttribute("quizStartTime", quizStartTime);
         session.setAttribute("categoryId", categoryId);
         session.setAttribute("quizName", quizName);
+        model.addAttribute("session", session);
         model.addAttribute("questions", questionList);
         model.addAttribute("quizName", quizName);
         return "take-quiz";

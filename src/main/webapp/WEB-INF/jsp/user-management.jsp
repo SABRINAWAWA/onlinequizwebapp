@@ -76,7 +76,7 @@
                                         <td>
                                             <form method="post" action="/user-management/user/active/${user.id}">
                                                 <button type="submit" class="btn btn-success btn-sm">
-                                                    Active
+                                                    Activate
                                                 </button>
                                             </form>
                                         </td>
