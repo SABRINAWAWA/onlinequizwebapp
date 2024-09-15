@@ -37,7 +37,7 @@
         </head>
 
         <body>
-            <%@ include file="admin-navigation.jsp" %>
+            <%@ include file="navigation.jsp" %>
                 <div class="content" align="center">
 
                     <h1 class="display-5">Questions Management</h1>

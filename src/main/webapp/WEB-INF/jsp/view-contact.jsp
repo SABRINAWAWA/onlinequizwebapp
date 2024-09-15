@@ -35,7 +35,7 @@
 </head>
 
 <body>
- <%@ include file="admin-navigation.jsp" %>
+ <%@ include file="navigation.jsp" %>
         <div class=".bg-light content" align="center">
                 <h1 class="display-5">View Contact Message</h1>
                 <table class="table-hover">

@@ -30,7 +30,7 @@
         </head>
 
         <body>
-            <%@ include file="admin-navigation.jsp" %>
+            <%@ include file="navigation.jsp" %>
                 <div class="content">
                     <div align="center">
                         <h1 class="display-5">User Management</h1>

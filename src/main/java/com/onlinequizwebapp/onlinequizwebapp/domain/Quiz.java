@@ -2,6 +2,7 @@ package com.onlinequizwebapp.onlinequizwebapp.domain;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Quiz {
     private int id;
@@ -131,5 +132,18 @@ public class Quiz {
                 ", quizName='" + quizName + '\'' +
                 ", timeDuration=" + timeDuration +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quiz quiz = (Quiz) o;
+        return id == quiz.id && Objects.equals(category, quiz.category) && Objects.equals(quizTaker, quiz.quizTaker) && Objects.equals(startTime, quiz.startTime) && Objects.equals(endTime, quiz.endTime) && Objects.equals(questionAnswerList, quiz.questionAnswerList) && Objects.equals(isPass, quiz.isPass) && Objects.equals(numberOfCorrectQuestions, quiz.numberOfCorrectQuestions) && Objects.equals(quizName, quiz.quizName) && Objects.equals(timeDuration, quiz.timeDuration);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, category, quizTaker, startTime, endTime, questionAnswerList, isPass, numberOfCorrectQuestions, quizName, timeDuration);
     }
 }

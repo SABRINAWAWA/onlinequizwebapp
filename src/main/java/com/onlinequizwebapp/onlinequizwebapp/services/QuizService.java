@@ -53,4 +53,6 @@ public class QuizService {
         newQuiz=quizDAOImpl.getQuizByQuizId(newQuiz.getId());
         return newQuiz;
     }
+
+    public List<Quiz> getAllQuizByCategoryId(Integer categoryId){return quizDAOImpl.getQuizByCategoryId(categoryId);}
 }

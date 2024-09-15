@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -71,6 +70,24 @@ public class QuizDAOImpl implements QuizDAO {
     }
 
     @Override
+    public List<Quiz> getQuizByCategoryId(Integer categoryId) {
+        String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
+                "FROM QuizQuestion qq\n" +
+                "RIGHT JOIN \n" +
+                "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
+                "ON qc.quizId=qq.quizId \n" +
+                "WHERE qc.categoryId=?;";
+        List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, categoryId);
+        for (Quiz quiz:quizList){
+            quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
+            quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
+            quiz.setNumberOfCorrectQuestions();
+            quiz.setIsPass();
+        }
+        return quizList;
+    }
+
+    @Override
     public Quiz getQuizByQuizIdUserId(Integer quizId, Integer userId) {
         String query="SELECT qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
                 "FROM QuizQuestion qq\n" +
@@ -94,7 +111,7 @@ public class QuizDAOImpl implements QuizDAO {
                 "FROM QuizQuestion qq\n" +
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
-                "ON qc.quizId=qq.quizId ORDER BY qc.startTime";
+                "ON qc.quizId=qq.quizId ORDER BY qc.startTime desc";
         List<Quiz> quizList = jdbcTemplate.query(query, rowMapper);
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
@@ -124,12 +141,12 @@ public class QuizDAOImpl implements QuizDAO {
 
     @Override
     public Quiz getQuizByUserIdCategoryIdQuizName(CreateQuizRequest createQuizRequest) {
-        String query="SELECT qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName\n" +
+        String query="SELECT qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
                 "FROM QuizQuestion qq\n" +
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
                 "ON qc.quizId=qq.quizId \n" +
-                "WHERE qc.quizName=? and qc.categoryId=? and qc.userId=?;";
+                "WHERE qc.categoryId=?";
         List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, createQuizRequest.getQuizName(), createQuizRequest.getCategoryId(), createQuizRequest.getUserId());
         return quizList.size()==0?null:quizList.get(0);
     }

@@ -10,7 +10,7 @@
 </head>
 
 <body>
- <%@ include file="admin-navigation.jsp" %>
+ <%@ include file="navigation.jsp" %>
 <div>
     <h1 class="display-4" align="center">Admin Management Portal</h1>
     <div class="list-group d-flex justify-content-center" align="center">

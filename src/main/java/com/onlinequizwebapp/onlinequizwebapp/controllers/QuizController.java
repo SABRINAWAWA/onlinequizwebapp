@@ -1,10 +1,13 @@
 package com.onlinequizwebapp.onlinequizwebapp.controllers;
 
+import com.onlinequizwebapp.onlinequizwebapp.domain.Category;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Question;
 import com.onlinequizwebapp.onlinequizwebapp.domain.Quiz;
 import com.onlinequizwebapp.onlinequizwebapp.domain.User;
+import com.onlinequizwebapp.onlinequizwebapp.services.CategoryService;
 import com.onlinequizwebapp.onlinequizwebapp.services.QuestionService;
 import com.onlinequizwebapp.onlinequizwebapp.services.QuizService;
+import com.onlinequizwebapp.onlinequizwebapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -13,29 +16,137 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
 public class QuizController{
     private final QuizService quizService;
     private final QuestionService questionService;
-    public QuizController(QuizService quizService, QuestionService questionService) {
+    private final CategoryService categoryService;
+    private final UserService userService;
+    public QuizController(QuizService quizService, QuestionService questionService, CategoryService categoryService, UserService userService) {
         this.quizService = quizService;
         this.questionService = questionService;
+        this.categoryService = categoryService;
+        this.userService = userService;
     }
 
     @GetMapping("/quiz-result-management")
     public String getAllQuizResults(HttpServletRequest request, Model model) {
         HttpSession session= request.getSession(false);
+        session.setAttribute("savedUserId", 0);
+        session.setAttribute("savedCategoryId", 0);
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
         List<Quiz> quizList=quizService.getAllQuizResults();
+        //System.out.println(quizList);
+        model.addAttribute("quizzes", quizList);
+        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
+        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
+        //System.out.println(uniqueCategoryList);
+        model.addAttribute("categories", uniqueCategoryList);
+        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
+        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
+        //System.out.println(uniqueUserList);
+        model.addAttribute("users", uniqueUserList);
+        return "quiz-result-management";
+    }
+
+    @GetMapping("/quiz-result-management/category/{categoryId}")
+    public String getAllQuizResultsByCategory(@PathVariable Integer categoryId, HttpServletRequest request, Model model) {
+        HttpSession session= request.getSession(false);
+        session.setAttribute("savedCategoryId", categoryId);
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        List<Quiz> quizList=quizService.getAllQuizByCategoryId(categoryId);
+        //System.out.println(quizList);
+        model.addAttribute("quizzes", quizList);
+        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
+        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
+        //System.out.println(uniqueCategoryList);
+        model.addAttribute("categories", uniqueCategoryList);
+        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
+        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
+        //System.out.println(uniqueUserList);
+        model.addAttribute("users", uniqueUserList);
+        return "quiz-result-management";
+    }
+
+    @GetMapping("/quiz-result-management/category/orderBy")
+    public String getAllSortedQuizResultsByCategory(HttpServletRequest request, Model model) {
+        HttpSession session= request.getSession(false);
+        Integer savedCategoryId=(Integer)session.getAttribute("savedCategoryId");
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        List<Quiz> quizList;
+        if (savedCategoryId!=0){
+            quizList=quizService.getAllQuizByCategoryId(savedCategoryId);
+        }else{
+            quizList=quizService.getAllQuizResults();
+        }
+        Collections.sort(quizList, Comparator.comparing(q -> q.getCategory().getName()));
+        //System.out.println(quizList);
+        model.addAttribute("quizzes", quizList);
+        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
+        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
+        //System.out.println(uniqueCategoryList);
+        model.addAttribute("categories", uniqueCategoryList);
+        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
+        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
+        //System.out.println(uniqueUserList);
+        model.addAttribute("users", uniqueUserList);
+        return "quiz-result-management";
+    }
+
+    @GetMapping("/quiz-result-management/user/{userId}")
+    public String getAllQuizResultsByUser(@PathVariable Integer userId, HttpServletRequest request, Model model) {
+        HttpSession session= request.getSession(false);
+        session.setAttribute("savedUserId", userId);
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        List<Quiz> quizList=quizService.getAllQuizResultForUser(userId);
         System.out.println(quizList);
         model.addAttribute("quizzes", quizList);
+        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
+        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
+        System.out.println(uniqueCategoryList);
+        model.addAttribute("categories", uniqueCategoryList);
+        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
+        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
+        System.out.println(uniqueUserList);
+        model.addAttribute("users", uniqueUserList);
+        return "quiz-result-management";
+    }
+
+    @GetMapping("/quiz-result-management/user/orderBy")
+    public String getAllSortedQuizResultsByUser(HttpServletRequest request, Model model) {
+        HttpSession session= request.getSession(false);
+        Integer savedUserId=(Integer)session.getAttribute("savedUserId");
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        List<Quiz> quizList;
+        if (savedUserId!=0){
+            quizList=quizService.getAllQuizResultForUser(savedUserId);
+        }else{
+            quizList=quizService.getAllQuizResults();
+        }
+        Collections.sort(quizList, Comparator.comparing(q -> q.getQuizTaker().getFirstName()));
+        System.out.println(quizList);
+        model.addAttribute("quizzes", quizList);
+        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
+        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
+        System.out.println(uniqueCategoryList);
+        model.addAttribute("categories", uniqueCategoryList);
+        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
+        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
+        System.out.println(uniqueUserList);
+        model.addAttribute("users", uniqueUserList);
         return "quiz-result-management";
     }
 
@@ -113,7 +224,7 @@ public class QuizController{
         for (int i = 0; i < questionIdList.size(); i++) {
             questionAnswerPair.put(questionIdList.get(i), answerIdList.get(i));
         }
-        System.out.println(questionAnswerPair);
+        //System.out.println(questionAnswerPair);
 
         // create quiz and add quiz to the model
         Quiz quiz=quizService.createNewQuiz(user.getId(), categoryId, quizStartTime, quizEndTime, quizName, questionAnswerPair);
