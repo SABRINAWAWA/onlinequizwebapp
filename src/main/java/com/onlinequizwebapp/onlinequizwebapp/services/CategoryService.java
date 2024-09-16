@@ -22,4 +22,6 @@ public class CategoryService {
     public List<Category> getAllCategory() {
         return categoryDAOImpl.getAllCategory();
     }
+
+    public List<Category> getAllCategoriesInQuiz(){return categoryDAOImpl.getAllCategoryInQuiz();}
 }

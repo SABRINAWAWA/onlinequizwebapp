@@ -37,7 +37,6 @@ public class LoginController{
                 }
             }
         }
-        session.setAttribute("hasOpenQuiz", false);
         model.addAttribute("session", session);
         return "login";
     }

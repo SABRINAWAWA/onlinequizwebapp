@@ -10,4 +10,5 @@ public interface UserDAO {
     User suspendedUserById(Integer id);
     List<User> getAllUsers();
     User getUserById(Integer id);
+    List<User> getUserWhoTookQuiz();
 }

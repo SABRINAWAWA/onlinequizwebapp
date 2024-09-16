@@ -31,4 +31,5 @@ public class UserService {
                         && a.getPassword().equals(password))
                 .findAny();
     }
+    public List<User> getQuizTakers(){return userDAOImpl.getUserWhoTookQuiz();}
 }

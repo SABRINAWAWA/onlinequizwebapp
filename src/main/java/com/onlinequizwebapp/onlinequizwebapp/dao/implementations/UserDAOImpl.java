@@ -53,4 +53,15 @@ public class UserDAOImpl implements UserDAO {
         List<User> user = jdbcTemplate.query(query, rowMapper, id);
         return user.size()==0 ? null:user.get(0);
     }
+
+    @Override
+    public List<User> getUserWhoTookQuiz(){
+        String query="SELECT distinct u.userId, u.password, u.email, u.firstname,u.lastname,u.isActive, u.isAdmin FROM Users u\n" +
+                "RIGHT JOIN \n" +
+                "Quiz q\n" +
+                "ON u.userId=q.userId \n" +
+                "ORDER BY u.firstname ASC;";
+        List<User> users = jdbcTemplate.query(query, rowMapper);
+        return users;
+    }
 }

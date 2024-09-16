@@ -71,15 +71,16 @@ public class QuizDAOImpl implements QuizDAO {
     }
 
     @Override
-    public List<Quiz> getQuizByCategoryId(Integer categoryId) {
+    public List<Quiz> getQuizByCategoryId(Integer categoryId, Integer offset) {
         String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
                 "FROM QuizQuestion qq\n" +
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
                 "ON qc.quizId=qq.quizId \n" +
                 "WHERE qc.categoryId=? \n" +
-                "ORDER BY qc.startTime desc;";
-        List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, categoryId);
+                "ORDER BY qc.startTime desc \n" +
+                "LIMIT 5 OFFSET ?;";
+        List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, categoryId, offset);
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
             quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
@@ -96,7 +97,8 @@ public class QuizDAOImpl implements QuizDAO {
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
                 "ON qc.quizId=qq.quizId \n" +
-                "WHERE qc.userId=? AND qc.quizId=?;";
+                "WHERE qc.userId=? AND qc.quizId=? \n" +
+                "ORDER BY qc.startTime DESC";
         List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, userId, quizId);
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
@@ -108,12 +110,33 @@ public class QuizDAOImpl implements QuizDAO {
     }
 
     @Override
+    public List<Quiz> getQuizByUserIdPagination(Integer userId, Integer offset) {
+        String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
+                "FROM QuizQuestion qq\n" +
+                "RIGHT JOIN \n" +
+                "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
+                "ON qc.quizId=qq.quizId \n" +
+                "WHERE qc.userId=? \n" +
+                "ORDER BY qc.startTime DESC\n" +
+                "LIMIT 5 OFFSET ?;";
+        List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, userId, offset);
+        for (Quiz quiz:quizList){
+            quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
+            quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
+            quiz.setNumberOfCorrectQuestions();
+            quiz.setIsPass();
+        }
+        return quizList;
+    }
+
+    @Override
     public List<Quiz> getAllQuizResult() {
         String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
                 "FROM QuizQuestion qq\n" +
                 "RIGHT JOIN \n" +
                 "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
-                "ON qc.quizId=qq.quizId ORDER BY qc.startTime desc";
+                "ON qc.quizId=qq.quizId \n" +
+                "ORDER BY qc.startTime desc";
         List<Quiz> quizList = jdbcTemplate.query(query, rowMapper);
         for (Quiz quiz:quizList){
             quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
@@ -122,6 +145,72 @@ public class QuizDAOImpl implements QuizDAO {
             quiz.setIsPass();
         }
         return quizList;
+    }
+
+    @Override
+    public List<Quiz> getAllQuizResultPagination(Integer offset) {
+        String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
+                "FROM QuizQuestion qq\n" +
+                "RIGHT JOIN \n" +
+                "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
+                "ON qc.quizId=qq.quizId \n" +
+                "ORDER BY qc.startTime desc \n" +
+                "LIMIT 5 OFFSET ?";
+        List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, offset);
+        for (Quiz quiz:quizList){
+            quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
+            quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
+            quiz.setNumberOfCorrectQuestions();
+            quiz.setIsPass();
+        }
+        return quizList;
+    }
+
+    @Override
+    public List<Quiz> getAllQuizResultPaginationOrderByCategory(Integer offset) {
+        String query="SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
+                "FROM QuizQuestion qq\n" +
+                "RIGHT JOIN \n" +
+                "(SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
+                "ON qc.quizId=qq.quizId \n" +
+                "ORDER BY qc.categoryName asc \n" +
+                "LIMIT 5 OFFSET ?";
+        List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, offset);
+        for (Quiz quiz:quizList){
+            quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
+            quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
+            quiz.setNumberOfCorrectQuestions();
+            quiz.setIsPass();
+        }
+        return quizList;
+    }
+
+    @Override
+    public List<Quiz> getAllQuizResultPaginationOrderByUser(Integer offset) {
+        String query="select distinct qqc.quizId, qqc.userId, qqc.quizName, qqc.startTime, qqc.endTime, qqc.categoryId, qqc.categoryName, qqc.timeDuration, u.firstname, u.lastname\n" +
+                "from (SELECT distinct qc.quizId, qc.userId, qc.quizName, qc.startTime, qc.endTime, qc.categoryId, qc.categoryName, TIMESTAMPDIFF(SECOND, qc.startTime, qc.endTime) AS timeDuration\n" +
+                "FROM QuizQuestion qq\n" +
+                "RIGHT JOIN (SELECT q.quizId as quizId, q.userId as userId, q.name AS quizName, q.startTime AS startTime, q.endTime AS endTime, c.categoryId AS categoryId, c.name AS categoryName FROM quiz q LEFT JOIN category c on c.categoryID=q.categoryId) as qc\n" +
+                "ON qc.quizId=qq.quizId) as qqc\n" +
+                "left join users u\n" +
+                "on u.userId=qqc.userId\n" +
+                "ORDER BY u.firstname asc, u.lastname asc\n" +
+                "LIMIT 5 OFFSET ?;";
+        List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, offset);
+        for (Quiz quiz:quizList){
+            quiz.setQuizTaker(userDAOImpl.getUserById(quiz.getQuizTaker().getId()));
+            quiz.setQuestionAnswerList(questionAnswerDAOImpl.getAllQuestionsAndAnswerByQuizIdUserId(quiz.getId(), quiz.getQuizTaker().getId()));
+            quiz.setNumberOfCorrectQuestions();
+            quiz.setIsPass();
+        }
+        return quizList;
+    }
+
+    @Override
+    public Integer getNumberOfQuiz() {
+        String query="SELECT count(*) FROM Quiz;";
+        Integer numOfQuiz=jdbcTemplate.queryForObject(query, Integer.class);
+        return numOfQuiz;
     }
 
     @Override
@@ -151,5 +240,17 @@ public class QuizDAOImpl implements QuizDAO {
                 "WHERE qc.quizName=? AND qc.categoryId=? AND qc.userId=?";
         List<Quiz> quizList = jdbcTemplate.query(query, rowMapper, createQuizRequest.getQuizName(), createQuizRequest.getCategoryId(), createQuizRequest.getUserId());
         return quizList.size()==0?null:quizList.get(0);
+    }
+
+    public Integer getNumberOfQuizzesBasedOnCategory(Integer categoryId){
+        String query="SELECT COUNT(*) FROM Quiz q where q.categoryId=?";
+        Integer totalQuiz = jdbcTemplate.queryForObject(query, Integer.class, categoryId);
+        return totalQuiz;
+    }
+
+    public Integer getNumberOfQuizzesBasedOnUser(Integer userId){
+        String query="SELECT COUNT(*) FROM Quiz q where q.userId=?";
+        Integer totalQuiz = jdbcTemplate.queryForObject(query, Integer.class, userId);
+        return totalQuiz;
     }
 }

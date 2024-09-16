@@ -56,4 +56,15 @@ public class CategoryDAOImpl implements CategoryDAO {
 
         return categories.size() == 0 ? null : categories.get(0);
     }
+
+    @Override
+    public List<Category> getAllCategoryInQuiz() {
+        String query="SELECT distinct q.categoryId, c.name\n" +
+                "FROM Quiz q\n" +
+                "LEFT JOIN Category c\n" +
+                "ON q.categoryId=c.categoryId \n" +
+                "ORDER BY c.name ASC;";
+        List<Category> categories = jdbcTemplate.query(query, rowMapper);
+        return categories;
+    }
 }

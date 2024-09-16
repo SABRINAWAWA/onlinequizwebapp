@@ -36,133 +36,106 @@ public class QuizController{
     @GetMapping("/quiz-result-management/page/{pageNum}")
     public String getAllQuizResults(@PathVariable Integer pageNum, HttpServletRequest request, Model model) {
         HttpSession session= request.getSession(false);
-        session.setAttribute("savedUserId", 0);
-        session.setAttribute("savedCategoryId", 0);
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
-        List<Quiz> quizList=quizService.getAllQuizResults();
-        //System.out.println(quizList);
-        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
-        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
-        //System.out.println(uniqueCategoryList);
-        model.addAttribute("categories", uniqueCategoryList);
-        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
-        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
-        //System.out.println(uniqueUserList);
-        model.addAttribute("users", uniqueUserList);
 
-        selectQuizList(quizList,model,pageNum);
+        retrieveDropdownValues(model);
+        // Calculate offset and retrieve quiz list
+        Integer offset=calculateOffset(model,pageNum, false, false, 0, 0);
+        List<Quiz> quizList=quizService.getAllQuizResultsPagination(offset);
+        model.addAttribute("quizzes", quizList);
+        model.addAttribute("urlPrefix", "/quiz-result-management/page/");
         return "quiz-result-management";
     }
 
-    private void selectQuizList(List<Quiz> quizList, Model model, Integer pageNum){
-        Integer numOfPage=(int)Math.ceil((double) quizList.size()/5);
-        model.addAttribute("numOfPage", numOfPage);
-        List<Quiz> selectedQuizList;
-        if (pageNum<numOfPage){
-            selectedQuizList= quizList.subList((pageNum - 1)*5, pageNum*5);
-        }else{
-            selectedQuizList= quizList.subList((pageNum - 1)*5, quizList.size());
+    private Integer calculateOffset(Model model, Integer pageNum, Boolean getQuizBasedOnCategory, Boolean getQuizBasedOnUser, Integer categoryId, Integer userId){
+        Integer numOfQuiz=0;
+        if (!getQuizBasedOnCategory&&!getQuizBasedOnUser){
+            numOfQuiz=quizService.getNumberOfQuizzes();
         }
-        model.addAttribute("quizzes", selectedQuizList);
+        else if(!getQuizBasedOnCategory&&getQuizBasedOnUser){
+            numOfQuiz=quizService.getNumberOfQuizzesBasedOnUser(userId);
+        }
+        else if(getQuizBasedOnCategory&&!getQuizBasedOnUser){
+            numOfQuiz=quizService.getNumberOfQuizzesBasedOnCategory(categoryId);
+        }
+        Integer numOfPage=(int)Math.ceil((double) numOfQuiz/5);
+        model.addAttribute("numOfPage", numOfPage);
+        Integer offset=(pageNum-1)*5;
+        return offset;
     }
 
-    @GetMapping("/quiz-result-management/category/{categoryId}")
+    private void retrieveDropdownValues(Model model){
+        // Retrieving categories in the quiz
+        List<Category> categoryList=categoryService.getAllCategoriesInQuiz();
+        model.addAttribute("categories", categoryList);
+        // Retrieving users in the quiz
+        List<User> userList=userService.getQuizTakers();
+        model.addAttribute("users", userList);
+
+    }
+
+    @GetMapping("/quiz-result-management/category/{categoryId}/page/{pageNum}")
     public String getAllQuizResultsByCategory(@PathVariable("categoryId") Integer categoryId,
+                                              @PathVariable("pageNum") Integer pageNum,
                                               HttpServletRequest request, Model model) {
         HttpSession session= request.getSession(false);
-        session.setAttribute("savedCategoryId", categoryId);
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
-        List<Quiz> quizList=quizService.getAllQuizByCategoryId(categoryId);
-        //System.out.println(quizList);
+        retrieveDropdownValues(model);
+        // Calculate offset and retrieve quiz list
+        Integer offset=calculateOffset(model,pageNum, true, false, categoryId, 0);
+        List<Quiz> quizList=quizService.getAllQuizByCategoryId(categoryId, offset);
         model.addAttribute("quizzes", quizList);
-        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
-        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
-        //System.out.println(uniqueCategoryList);
-        model.addAttribute("categories", uniqueCategoryList);
-        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
-        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
-        //System.out.println(uniqueUserList);
-        model.addAttribute("users", uniqueUserList);
+        model.addAttribute("urlPrefix", "/quiz-result-management/category/"+categoryId+"/page/");
         return "quiz-result-management";
     }
 
-    @GetMapping("/quiz-result-management/category/orderBy")
-    public String getAllSortedQuizResultsByCategory(HttpServletRequest request, Model model) {
+    @GetMapping("/quiz-result-management/category/orderBy/page/{pageNum}")
+    public String getAllSortedQuizResultsByCategory(@PathVariable("pageNum") Integer pageNum,
+                                                    HttpServletRequest request, Model model) {
         HttpSession session= request.getSession(false);
-        Integer savedCategoryId=(Integer)session.getAttribute("savedCategoryId");
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
-        List<Quiz> quizList;
-        if (savedCategoryId!=0){
-            quizList=quizService.getAllQuizByCategoryId(savedCategoryId);
-        }else{
-            quizList=quizService.getAllQuizResults();
-        }
-        Collections.sort(quizList, Comparator.comparing(q -> q.getCategory().getName()));
-        //System.out.println(quizList);
+        retrieveDropdownValues(model);
+        Integer offset=calculateOffset(model,pageNum, false, false, 0, 0);
+        List<Quiz>  quizList=quizService.getAllQuizResultPaginationOrderByCategory(offset);
         model.addAttribute("quizzes", quizList);
-        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
-        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
-        //System.out.println(uniqueCategoryList);
-        model.addAttribute("categories", uniqueCategoryList);
-        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
-        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
-        //System.out.println(uniqueUserList);
-        model.addAttribute("users", uniqueUserList);
+        model.addAttribute("urlPrefix", "/quiz-result-management/category/orderBy/page/");
         return "quiz-result-management";
     }
 
-    @GetMapping("/quiz-result-management/user/{userId}")
+    @GetMapping("/quiz-result-management/user/{userId}/page/{pageNum}")
     public String getAllQuizResultsByUser(@PathVariable("userId") Integer userId,
+                                          @PathVariable("pageNum") Integer pageNum,
                                           HttpServletRequest request, Model model) {
         HttpSession session= request.getSession(false);
-        session.setAttribute("savedUserId", userId);
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
-        List<Quiz> quizList=quizService.getAllQuizResultForUser(userId);
-        System.out.println(quizList);
+        Integer offset=calculateOffset(model,pageNum, false,true, 0, userId);
+        List<Quiz> quizList=quizService.getQuizByUserIdPagination(userId, offset);
         model.addAttribute("quizzes", quizList);
-        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
-        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
-        System.out.println(uniqueCategoryList);
-        model.addAttribute("categories", uniqueCategoryList);
-        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
-        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
-        System.out.println(uniqueUserList);
-        model.addAttribute("users", uniqueUserList);
+        model.addAttribute("urlPrefix", "/quiz-result-management/user/"+userId+"/page/");
+        retrieveDropdownValues(model);
         return "quiz-result-management";
     }
 
-    @GetMapping("/quiz-result-management/user/orderBy")
-    public String getAllSortedQuizResultsByUser(HttpServletRequest request, Model model) {
+    @GetMapping("/quiz-result-management/user/orderBy/page/{pageNum}")
+    public String getAllSortedQuizResultsByUser(@PathVariable("pageNum") Integer pageNum,
+                                                HttpServletRequest request, Model model) {
         HttpSession session= request.getSession(false);
-        Integer savedUserId=(Integer)session.getAttribute("savedUserId");
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
-        List<Quiz> quizList;
-        if (savedUserId!=0){
-            quizList=quizService.getAllQuizResultForUser(savedUserId);
-        }else{
-            quizList=quizService.getAllQuizResults();
-        }
-        Collections.sort(quizList, Comparator.comparing(q -> q.getQuizTaker().getFirstName()));
-        System.out.println(quizList);
+        Integer offset= calculateOffset(model, pageNum, false, false, 0, 0);
+        List<Quiz> quizList = quizService.getAllQuizSortedByUserPagination(offset);
         model.addAttribute("quizzes", quizList);
-        List<Category> categoryList=quizList.stream().map(q->q.getCategory()).collect(Collectors.toList());
-        List<Category> uniqueCategoryList=categoryList.stream().distinct().collect(Collectors.toList());
-        System.out.println(uniqueCategoryList);
-        model.addAttribute("categories", uniqueCategoryList);
-        List<User> userList=quizList.stream().map(q->q.getQuizTaker()).collect(Collectors.toList());
-        List<User> uniqueUserList=userList.stream().distinct().collect(Collectors.toList());
-        System.out.println(uniqueUserList);
-        model.addAttribute("users", uniqueUserList);
+        model.addAttribute("urlPrefix", "/quiz-result-management/user/orderBy/page/");
+        retrieveDropdownValues(model);
         return "quiz-result-management";
     }
 

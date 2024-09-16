@@ -49,7 +49,7 @@
                             <th>
                                 <div class="btn-group">
                                     <a type="button" class="btn btn-outline-success"
-                                    href="/quiz-result-management/category/orderBy">Category</a>
+                                    href="/quiz-result-management/category/orderBy/page/1">Category</a>
                                     <button type="button"
                                         class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,7 +58,7 @@
                                     <ul class="dropdown-menu">
                                         <c:forEach var="category" items="${categories}" varStatus="loop">
                                             <li><a class="dropdown-item"
-                                                    href="/quiz-result-management/category/${category.getId()}">${category.name}</a>
+                                                    href="/quiz-result-management/category/${category.getId()}/page/1">${category.name}</a>
                                             </li>
                                         </c:forEach>
                                     </ul>
@@ -66,7 +66,7 @@
                             </th>
                             <th>
                                 <div class="btn-group">
-                                    <a type="button" class="btn btn-outline-success" href="/quiz-result-management/user/orderBy">User Name</a>
+                                    <a type="button" class="btn btn-outline-success" href="/quiz-result-management/user/orderBy/page/1">User Name</a>
                                     <button type="button"
                                         class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -75,7 +75,7 @@
                                     <ul class="dropdown-menu">
                                         <c:forEach var="user" items="${users}" varStatus="loop">
                                             <li><a class="dropdown-item"
-                                                    href="/quiz-result-management/user/${user.getId()}">${user.firstName}
+                                                    href="/quiz-result-management/user/${user.getId()}/page/1">${user.firstName}
                                                     ${user.lastName}</a></li>
                                         </c:forEach>
                                     </ul>
@@ -120,7 +120,7 @@
                         <ul class="pagination pagination-md justify-content-center">
                             <c:forEach var="i" begin="1" end="${numOfPage}">
                                 <li class="page-item">
-                                    <a class="page-link" href="/quiz-result-management/page/${i}">${i}</a>
+                                    <a class="page-link" href="${urlPrefix}${i}">${i}</a>
                                 </li>
                             </c:forEach>
                         </ul>
