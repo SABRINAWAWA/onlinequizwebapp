@@ -42,28 +42,23 @@ public class UserController{
     public String activeUserById(@PathVariable Integer id, Model model) {
         User user=userService.activeUserById(id);
         System.out.println(user);
-        return "redirect:/user-management";
+        return "redirect:/user-management/page/1";
     }
 
     @PostMapping("/user-management/user/suspend/{id}")
     public String suspendUserById(@PathVariable Integer id, Model model) {
         User user=userService.suspendedUserById(id);
         System.out.println(user);
-        return "redirect:/user-management";
+        return "redirect:/user-management/page/1";
     }
 
     @GetMapping("/user-register")
     public String createNewUser(HttpServletRequest request, Model model) {
-        HttpSession session= request.getSession(false);
+        HttpSession session= request.getSession(true);
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
-        Boolean hasOpenQuiz=(Boolean) session.getAttribute("hasOpenQuiz");
-        if (hasOpenQuiz==true){
-            Integer categoryId=(Integer) session.getAttribute("categoryId");
-            model.addAttribute("categoryId", categoryId);
-            model.addAttribute("hasOpenQuiz", hasOpenQuiz);
-        }
+        model.addAttribute("hasOpenQuiz", false);
         return "user-register";
     }
 

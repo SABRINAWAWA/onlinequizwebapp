@@ -124,7 +124,7 @@
             <div class="content">
                 <c:choose>
                     <c:when test="${user.getAdmin()==true}">
-                        <a href="/quiz-result-management" class="btn btn-primary">Back</a>
+                        <a href="/quiz-result-management/page/1" class="btn btn-primary">Back</a>
                     </c:when>
                     <c:otherwise>
                         <a href="/home" class="btn btn-primary">Back</a>

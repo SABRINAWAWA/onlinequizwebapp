@@ -18,7 +18,7 @@
         </head>
 
         <body>
-            <%@ include file="admin-navigation.jsp" %>
+            <%@ include file="navigation.jsp" %>
                 <div class="content">
                     <h2 align="center">Create a new question</h2>
                     <form method="post" action="/questions-management/question/new">

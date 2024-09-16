@@ -22,6 +22,9 @@
             font-size: 12px;
             text-decoration: none;
         }
+        table{
+            font-size: 20px;
+        }
     </style>
 </head>
 

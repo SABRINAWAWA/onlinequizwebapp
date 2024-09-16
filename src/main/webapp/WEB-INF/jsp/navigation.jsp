@@ -51,14 +51,7 @@
                             </c:otherwise>
                         </c:choose>
                         <c:choose>
-                            <c:when test="${hasOpenQuiz==true}">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/take-quiz/category/${categoryId}">Taking Quiz</a>
-                                </li>
-                            </c:when>
-                        </c:choose>
-                        <c:choose>
-                            <c:when test="${user.getAdmin() ==true}">
+                            <c:when test="${user.getAdmin()==true}">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                         aria-expanded="false">
@@ -74,6 +67,13 @@
                                 </li>
                             </c:when>
                             <c:otherwise>
+                                <c:choose>
+                                    <c:when test="${hasOpenQuiz==true}">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/take-quiz/category/${categoryId}">Taking Quiz</a>
+                                        </li>
+                                    </c:when>
+                                </c:choose>
                                 <li class="nav-item">
                                     <a class="nav-link active" aria-current="page" href="/create-contact">Contact Us</a>
                                 </li>

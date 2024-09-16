@@ -119,6 +119,7 @@
                 }
 
                 function SubmitFunction() {
+                    alert("Times' Up! Quiz will be submitted!")
                     $('form').submit();
                 }
 

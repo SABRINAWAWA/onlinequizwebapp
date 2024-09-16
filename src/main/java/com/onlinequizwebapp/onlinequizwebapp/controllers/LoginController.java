@@ -37,7 +37,7 @@ public class LoginController{
                 }
             }
         }
-
+        session.setAttribute("hasOpenQuiz", false);
         model.addAttribute("session", session);
         return "login";
     }
@@ -65,8 +65,8 @@ public class LoginController{
                 HttpSession newSession = request.getSession(true);
 
                 // store user details in session
-                newSession.setAttribute("user", possibleUser.get());
                 newSession.setAttribute("hasOpenQuiz", false);
+                newSession.setAttribute("user", possibleUser.get());
                 if (possibleUser.get().getAdmin()&&possibleUser.get().getActive()){
                     return "redirect:/admin-management-portal";
                 }else {
