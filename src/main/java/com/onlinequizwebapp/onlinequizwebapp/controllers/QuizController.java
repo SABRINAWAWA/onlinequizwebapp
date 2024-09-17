@@ -46,7 +46,12 @@ public class QuizController{
         List<Quiz> quizList=quizService.getAllQuizResultsPagination(offset);
         model.addAttribute("quizzes", quizList);
         model.addAttribute("urlPrefix", "/quiz-result-management/page/");
-        return "quiz-result-management";
+
+        if (user.getAdmin()){
+            return "quiz-result-management";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     private Integer calculateOffset(Model model, Integer pageNum, Boolean getQuizBasedOnCategory, Boolean getQuizBasedOnUser, Integer categoryId, Integer userId){
@@ -90,7 +95,11 @@ public class QuizController{
         List<Quiz> quizList=quizService.getAllQuizByCategoryId(categoryId, offset);
         model.addAttribute("quizzes", quizList);
         model.addAttribute("urlPrefix", "/quiz-result-management/category/"+categoryId+"/page/");
-        return "quiz-result-management";
+        if (user.getAdmin()){
+            return "quiz-result-management";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @GetMapping("/quiz-result-management/category/orderBy/page/{pageNum}")
@@ -105,7 +114,11 @@ public class QuizController{
         List<Quiz>  quizList=quizService.getAllQuizResultPaginationOrderByCategory(offset);
         model.addAttribute("quizzes", quizList);
         model.addAttribute("urlPrefix", "/quiz-result-management/category/orderBy/page/");
-        return "quiz-result-management";
+        if (user.getAdmin()){
+            return "quiz-result-management";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @GetMapping("/quiz-result-management/user/{userId}/page/{pageNum}")
@@ -121,7 +134,11 @@ public class QuizController{
         model.addAttribute("quizzes", quizList);
         model.addAttribute("urlPrefix", "/quiz-result-management/user/"+userId+"/page/");
         retrieveDropdownValues(model);
-        return "quiz-result-management";
+        if (user.getAdmin()){
+            return "quiz-result-management";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @GetMapping("/quiz-result-management/user/orderBy/page/{pageNum}")
@@ -136,7 +153,11 @@ public class QuizController{
         model.addAttribute("quizzes", quizList);
         model.addAttribute("urlPrefix", "/quiz-result-management/user/orderBy/page/");
         retrieveDropdownValues(model);
-        return "quiz-result-management";
+        if (user.getAdmin()){
+            return "quiz-result-management";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @GetMapping("/quiz/{quizId}")

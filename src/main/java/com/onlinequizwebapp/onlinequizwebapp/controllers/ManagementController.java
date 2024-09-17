@@ -15,6 +15,10 @@ public class ManagementController{
         model.addAttribute("session", session);
         User user=(User) session.getAttribute("user");
         model.addAttribute("user", user);
-        return "admin-management-portal";
+        if (user.getAdmin()){
+            return "admin-management-portal";
+        }else{
+            return "user-access-denied";
+        }
     }
 }

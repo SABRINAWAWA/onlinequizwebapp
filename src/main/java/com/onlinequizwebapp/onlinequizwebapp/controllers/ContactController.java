@@ -27,7 +27,11 @@ public class ContactController{
         List<Contact> listContacts=contactService.getAllContact();
         System.out.println(listContacts);
         model.addAttribute("contacts", listContacts);
-        return "contact-management";
+        if (user.getAdmin()){
+            return "contact-management";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @GetMapping("/view-contact-us/{id}")
@@ -40,7 +44,11 @@ public class ContactController{
         Contact contact=contactService.getContactById(id).orElse(null);
         System.out.println(contact);
         model.addAttribute("contact", contact);
-        return "view-contact";
+        if (user.getAdmin()){
+            return "view-contact";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @GetMapping("/create-contact")

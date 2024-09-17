@@ -35,7 +35,11 @@ public class QuestionController{
         List<Question> questions=questionService.getAllQuestions();
         System.out.println(questions);
         model.addAttribute("questions", questions);
-        return "questions-management";
+        if (user.getAdmin()){
+            return "questions-management";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @PostMapping("/question/active/{id}")
@@ -53,11 +57,19 @@ public class QuestionController{
     }
 
     @GetMapping("/question/new")
-    public String createNewQuestion(Model model) {
+    public String createNewQuestion(HttpServletRequest request, Model model) {
+        HttpSession session= request.getSession(false);
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
         List<Category> categoryList=categoryService.getAllCategory();
         System.out.println(categoryList);
         model.addAttribute("categories", categoryList);
-        return "create-new-question";
+        if (user.getAdmin()){
+            return "create-new-question";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @PostMapping("/question/new")
@@ -81,14 +93,22 @@ public class QuestionController{
     }
 
     @GetMapping("/question/edit/{id}")
-    public String updateQuestion(@PathVariable Integer id, Model model){
+    public String updateQuestion(@PathVariable Integer id, HttpServletRequest request, Model model){
+        HttpSession session= request.getSession(false);
+        model.addAttribute("session", session);
+        User user=(User) session.getAttribute("user");
+        model.addAttribute("user", user);
         Question question=questionService.getQuestionById(id);
         System.out.println(question);
         List<Category> categoryList=categoryService.getAllCategory();
         System.out.println(categoryList);
         model.addAttribute("categories", categoryList);
         model.addAttribute("question", question);
-        return "edit-question";
+        if (user.getAdmin()){
+            return "edit-question";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @PostMapping("/question/edit/{id}")

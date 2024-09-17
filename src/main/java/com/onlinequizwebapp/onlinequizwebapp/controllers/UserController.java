@@ -35,7 +35,11 @@ public class UserController{
             selectedUserList= listUsers.subList((pageNum - 1)*5, listUsers.size());
         }
         model.addAttribute("users", selectedUserList);
-        return "user-management";
+        if (user.getAdmin()){
+            return "user-management";
+        }else{
+            return "user-access-denied";
+        }
     }
 
     @PostMapping("/user-management/user/active/{id}")
@@ -67,6 +71,6 @@ public class UserController{
                                 @RequestParam String email,@RequestParam String password,
                                   Model model) {
         userService.createNewUser(new User(0, firstName,  lastName,  email,  password, true, false));
-        return "redirect:/user-management";
+        return "redirect:/login";
     }
 }
